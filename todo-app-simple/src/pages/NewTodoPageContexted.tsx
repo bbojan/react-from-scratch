@@ -7,7 +7,7 @@ const useNewTodoPageContextedStyles = makeStyles(() =>
   createStyles({
     root: {
       maxWidth: 400,
-      margin: "0 auto",
+      margin: "1rem auto",
       border: "1px blue solid",
       padding: "1rem",
     },

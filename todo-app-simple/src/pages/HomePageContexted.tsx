@@ -1,18 +1,20 @@
-import { createStyles, List, makeStyles } from "@material-ui/core";
+import { createStyles, List, makeStyles, Paper } from "@material-ui/core";
 import clsx from "clsx";
-import React, { FC, useContext } from "react";
-import { Link } from "react-router-dom";
-import { Search } from "../components/Search";
+import React, { FC } from "react";
 import { TodoListItem } from "../components/TodoListItem";
-import { TodoContext, useTodoContext } from "../store";
+import { useTodoContext } from "../store";
 
 const useHomePageContextedStyles = makeStyles(() =>
   createStyles({
-    wrapper: {},
+    wrapper: { padding: "1rem" },
     root: {
-      maxWidth: 400,
+      maxWidth: 600,
+      minHeight: 200,
+      maxHeight: `calc(100vh - ${64 + 56}px)`,
+      overflow: "auto",
+      padding: "1rem 3rem",
       margin: "0 auto",
-      border: "1px blue solid",
+      // border: "1px blue solid",
     },
     noItems: { border: "none" },
     list: {},
@@ -36,22 +38,20 @@ const HomePageContexted: FC<HomePageContextedProps> = () => {
   const isEmpty = !todoList.length;
   return (
     <div className={clsx(classes.wrapper)}>
-      <Link to="/new">Add New Todo </Link>
-      <Search />
-
-      <div className={clsx(classes.root, { [classes.noItems]: isEmpty })}>
-        <>
-          {isEmpty ? (
-            <h4>No Todo Items, Plase create some</h4>
-          ) : (
-            <List className={classes.list}>
-              {todoList.map((todo) => (
-                <TodoListItem key={todo.id} todo={todo} onDelete={onDelete} />
-              ))}
-            </List>
-          )}
-        </>
-      </div>
+      <Paper
+        elevation={4}
+        className={clsx(classes.root, { [classes.noItems]: isEmpty })}
+      >
+        {isEmpty ? (
+          <h4>No Todo Items, Plase create some</h4>
+        ) : (
+          <List className={classes.list}>
+            {todoList.map((todo) => (
+              <TodoListItem key={todo.id} todo={todo} onDelete={onDelete} />
+            ))}
+          </List>
+        )}
+      </Paper>
     </div>
   );
 };
