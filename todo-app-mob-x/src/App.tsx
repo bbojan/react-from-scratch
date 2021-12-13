@@ -1,26 +1,36 @@
-import React from "react";
-import { Link, Route, Switch } from "react-router-dom";
-import { useTodos } from "./hooks/useTodos";
+import { observer } from "mobx-react-lite";
+import React, { useEffect } from "react";
+import { Route, Switch } from "react-router-dom";
+import SearchAppBar from "./components/AppBar";
 import HomePage from "./pages/HomePage";
 import NewTodoPage from "./pages/NewTodoPage";
 import TodoDetailsPage from "./pages/TodoDetailsPage";
+import { todoStore } from "./todoStore";
 
 function App() {
-  const { todoList, onDelete, onCreate } = useTodos();
+  useEffect(() => {
+    todoStore.loadTodos();
+  }, []);
+
   return (
     <div>
-      <Link to="/new">Add New Todo </Link>
+      <SearchAppBar />
       <div>
         <Switch>
           <Route
             exact={true}
             path="/"
-            render={() => <HomePage todoList={todoList} onDelete={onDelete} />}
+            render={() => (
+              <HomePage
+                todoList={todoStore.filteredTodos}
+                onDelete={todoStore.onDelete}
+              />
+            )}
           />
           <Route
             exact={true}
             path="/new"
-            render={() => <NewTodoPage onCreate={onCreate} />}
+            render={() => <NewTodoPage onCreate={todoStore.onCreate} />}
           />
           <Route exact={true} path="/:id" component={TodoDetailsPage} />
         </Switch>
@@ -29,4 +39,4 @@ function App() {
   );
 }
 
-export default App;
+export default observer(App);

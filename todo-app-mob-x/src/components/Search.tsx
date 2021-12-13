@@ -3,11 +3,12 @@ import {
   createStyles,
   InputBase,
   makeStyles,
-  Theme,
+  Theme
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
+import { observer } from "mobx-react-lite";
 import React, { FC, useCallback } from "react";
-import { useTodoContext } from "../store";
+import { todoStore } from "../todoStore";
 
 const useSearchStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -55,15 +56,17 @@ const useSearchStyles = makeStyles((theme: Theme) =>
 
 interface SearchProps {}
 
-export const Search: FC<SearchProps> = ({}) => {
+export const Search: FC<SearchProps> = observer(({}) => {
   const classes = useSearchStyles();
-  const ctx = useTodoContext();
+  //const ctx = useTodoContext();
 
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      ctx.onSearchChange(event.target.value);
+      const txt = event.target.value;
+      todoStore.setSearch(txt);
+      // todoStore .onSearchChange(event.target.value);
     },
-    [ctx]
+    []
   );
 
   return (
@@ -78,9 +81,9 @@ export const Search: FC<SearchProps> = ({}) => {
           input: classes.inputInput,
         }}
         inputProps={{ "aria-label": "search" }}
-        value={ctx.search}
+        value={todoStore.search}
         onChange={handleSearchChange}
       />
     </div>
   );
-};
+});
