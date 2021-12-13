@@ -1,62 +1,71 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { TodoCreateModel, TodoModel } from "../types/todo.model";
-import { createNewID } from "../types/utls/id";
 
 export const useTodos = () => {
-  const _todoList: Array<TodoModel> = useMemo(() => {
-    return [
-      {
-        id: 0,
-        title: "Todo 1",
-        done: false,
-        description: "Todo 1 description",
-      },
-      {
-        id: 1,
-        title: "Todo 2",
-        done: false,
-        description: "Todo 2 description",
-      },
-      { id: 2, title: "Todo 3", done: true, description: "Todo 3 description" },
-      {
-        id: 3,
-        title: "Todo 4",
-        done: false,
-        description: "Todo 4 description",
-      },
-    ];
-  }, []);
-
   const [search, setSearch] = useState("");
 
-  const [todoList, setTodoList] = useState(_todoList);
+  const [todoList, setTodoList] = useState<TodoModel[]>([]);
+
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  function loadTodos() {
+    fetch("http://localhost:1377/")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setIsLoaded(true);
+        setTodoList(data.todos as TodoModel[]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  useEffect(() => {
+    if (!isLoaded) {
+      loadTodos();
+    }
+  }, [isLoaded]);
 
   const onSearchChange = useCallback((_search: string) => {
     setSearch(_search);
   }, []);
 
   const onCreate = useCallback(
-    (todoCreateModel: TodoCreateModel) => {
-      const newTodo: TodoModel = {
-        ...todoCreateModel,
-        done: false,
-        id: createNewID(),
-      };
-
-      const newTodoList = [...todoList, newTodo];
-      setTodoList(newTodoList);
+    async (todoCreateModel: TodoCreateModel) => {
+      try {
+        const result = await fetch(`http://localhost:1377/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(todoCreateModel),
+        }).then((res) => res.json());
+        console.log(result);
+        const newTodoList = [...todoList, result.todo];
+        setTodoList(newTodoList);
+      } catch (err) {}
     },
     [todoList]
   );
 
   const onDelete = useCallback(
     (id: number) => {
-      const idx = todoList.findIndex((todo) => todo.id === id);
-      if (idx > -1) {
-        const newTodoList = [...todoList];
-        newTodoList.splice(idx, 1);
-        setTodoList(newTodoList);
-      }
+      fetch(`http://localhost:1377/${id}`, {
+        method: "DELETE",
+      })
+        .then((res) => res.json())
+        .then(() => {
+          const idx = todoList.findIndex((todo) => todo.id === id);
+          if (idx > -1) {
+            const newTodoList = [...todoList];
+            newTodoList.splice(idx, 1);
+            setTodoList(newTodoList);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     [todoList]
   );

@@ -3,7 +3,7 @@ import { useTodos } from "./hooks/useTodos";
 
 export const TodoContext = React.createContext<ReturnType<typeof useTodos>>({
   todoList: [],
-  onCreate: () => {},
+  onCreate: ()=> Promise.resolve(),
   onDelete: () => {},
   onSearchChange: () => {},
   search: "",

@@ -1,5 +1,5 @@
+import cors from "cors";
 import express from "express";
-import path from "path";
 const app = express();
 const port = 1377;
 
@@ -16,10 +16,31 @@ export interface TodoCreateModel {
 }
 
 const memoryStore: { todos: TodoModel[] } = {
-  todos: [],
+  todos: [
+    {
+      id: 0,
+      title: "Todo 1",
+      done: false,
+      description: "Todo 1 description",
+    },
+    {
+      id: 1,
+      title: "Todo 2",
+      done: false,
+      description: "Todo 2 description",
+    },
+    { id: 2, title: "Todo 3", done: true, description: "Todo 3 description" },
+    {
+      id: 3,
+      title: "Todo 4",
+      done: false,
+      description: "Todo 4 description",
+    },
+  ],
 };
 
 app.use(express.json());
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
