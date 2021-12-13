@@ -7,6 +7,7 @@ import {
   Paper,
 } from "@material-ui/core";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
+// import EditOutline from "@material-ui/icons/EditOutline";
 import React, { FC } from "react";
 import { TodoModel } from "../types/todo.model";
 
@@ -53,6 +54,15 @@ export const TodoListItem: FC<TodoListItemProps> = ({ todo, onDelete }) => {
         >
           <DeleteOutline />
         </IconButton>
+        {/* <IconButton
+          className={classes.editBtn}
+          onClick={() => {
+            console.log("edit: ", todo.id);
+            onEdit(todo.id);
+          }}
+        >
+          <EditOutline />
+        </IconButton> */}
       </Paper>
     </ListItem>
   );
