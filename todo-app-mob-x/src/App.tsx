@@ -1,4 +1,4 @@
-import { observer } from "mobx-react-lite";
+import { Observer, observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import SearchAppBar from "./components/AppBar";
@@ -21,16 +21,24 @@ function App() {
             exact={true}
             path="/"
             render={() => (
-              <HomePage
-                todoList={todoStore.filteredTodos}
-                onDelete={todoStore.onDelete}
-              />
+              <Observer>
+                {() => (
+                  <HomePage
+                    todoList={todoStore.filteredTodos}
+                    onDelete={todoStore.onDelete}
+                  />
+                )}
+              </Observer>
             )}
           />
           <Route
             exact={true}
             path="/new"
-            render={() => <NewTodoPage onCreate={todoStore.onCreate} />}
+            render={() => (
+              <Observer>
+                {() => <NewTodoPage onCreate={todoStore.onCreate} />}
+              </Observer>
+            )}
           />
           <Route exact={true} path="/:id" component={TodoDetailsPage} />
         </Switch>
