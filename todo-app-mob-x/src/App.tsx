@@ -17,29 +17,8 @@ function App() {
       <SearchAppBar />
       <div>
         <Switch>
-          <Route
-            exact={true}
-            path="/"
-            render={() => (
-              <Observer>
-                {() => (
-                  <HomePage
-                    todoList={todoStore.filteredTodos}
-                    onDelete={todoStore.onDelete}
-                  />
-                )}
-              </Observer>
-            )}
-          />
-          <Route
-            exact={true}
-            path="/new"
-            render={() => (
-              <Observer>
-                {() => <NewTodoPage onCreate={todoStore.onCreate} />}
-              </Observer>
-            )}
-          />
+          <Route exact={true} path="/" component={HomePage} />
+          <Route exact={true} path="/new" component={NewTodoPage} />
           <Route exact={true} path="/:id" component={TodoDetailsPage} />
         </Switch>
       </div>

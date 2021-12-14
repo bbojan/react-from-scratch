@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { observer } from "mobx-react-lite";
 import React, { FC } from "react";
 import { TodoListItem } from "../components/TodoListItem";
+import { todoStore } from "../todoStore";
 import { TodoModel } from "../types/todo.model";
 
 const useHomePageStyles = makeStyles(() =>
@@ -18,19 +19,10 @@ const useHomePageStyles = makeStyles(() =>
   })
 );
 
-interface HomePageProps {
-  todoList: TodoModel[];
-  onDelete: (id: number) => void;
-}
+interface HomePageProps {}
 
-// const _todoList: Array<TodoModel> = [
-//   { id: 0, title: "Todo 1", done: false, description: "Todo 1 description" },
-//   { id: 1, title: "Todo 2", done: false, description: "Todo 2 description" },
-//   { id: 2, title: "Todo 3", done: true, description: "Todo 3 description" },
-//   { id: 3, title: "Todo 4", done: false, description: "Todo 4 description" },
-// ];
-
-const HomePage: FC<HomePageProps> = ({ onDelete, todoList }) => {
+const HomePage: FC<HomePageProps> = () => {
+  const todoList = todoStore.filteredTodos;
   const classes = useHomePageStyles();
 
   const isEmpty = !todoList.length;
@@ -43,7 +35,12 @@ const HomePage: FC<HomePageProps> = ({ onDelete, todoList }) => {
           ) : (
             <List className={classes.list}>
               {todoList.map((todo) => (
-                <TodoListItem key={todo.id} todo={todo} onDelete={onDelete} />
+                <TodoListItem
+                  key={todo.id}
+                  todo={todo}
+                  onDelete={todoStore.onDelete}
+                  renderTitle={() => <div>{todo.title}</div>}
+                />
               ))}
             </List>
           )}

@@ -27,18 +27,28 @@ const useTodoListItemStyles = makeStyles(() =>
 
 interface TodoListItemProps {
   todo: TodoModel;
+  renderTitle?: () => JSX.Element;
   onDelete: (id: number) => void;
 }
 
-export const TodoListItem: FC<TodoListItemProps> = ({ todo, onDelete }) => {
+export const TodoListItem: FC<TodoListItemProps> = ({
+  todo,
+  onDelete,
+  renderTitle,
+}) => {
   const classes = useTodoListItemStyles();
 
   return (
     <ListItem className={classes.root}>
       <Paper className={classes.paper}>
-        <div>
-          Title: <ListItemText primary={todo.title} className={classes.text} />
-        </div>
+        {!!renderTitle ? (
+          renderTitle()
+        ) : (
+          <div>
+            Title:{" "}
+            <ListItemText primary={todo.title} className={classes.text} />
+          </div>
+        )}
         {Boolean(todo.description) ? (
           <div>
             Discription:{" "}

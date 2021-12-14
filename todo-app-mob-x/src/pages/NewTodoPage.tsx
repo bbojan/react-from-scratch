@@ -1,6 +1,7 @@
 import { Button, createStyles, makeStyles, TextField } from "@material-ui/core";
 import React, { FC, useCallback } from "react";
 import { useHistory } from "react-router";
+import { todoStore } from "../todoStore";
 import { TodoCreateModel } from "../types/todo.model";
 
 const useNewTodoPageStyles = makeStyles(() =>
@@ -14,11 +15,9 @@ const useNewTodoPageStyles = makeStyles(() =>
   })
 );
 
-interface NewTodoPageProps {
-  onCreate: (m: TodoCreateModel) => void;
-}
+interface NewTodoPageProps {}
 
-const NewTodoPage: FC<NewTodoPageProps> = ({ onCreate }) => {
+const NewTodoPage: FC<NewTodoPageProps> = () => {
   const classes = useNewTodoPageStyles();
   const history = useHistory();
 
@@ -26,9 +25,9 @@ const NewTodoPage: FC<NewTodoPageProps> = ({ onCreate }) => {
   const [description, setDescription] = React.useState("");
 
   const applyOnCreate = useCallback(() => {
-    onCreate({ title, description });
+    todoStore.onCreate({ title, description });
     history.push("/");
-  }, [onCreate, title, description, history]);
+  }, [title, description, history]);
 
   return (
     <div className={classes.root}>
