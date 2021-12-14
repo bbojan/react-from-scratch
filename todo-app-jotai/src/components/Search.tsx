@@ -7,8 +7,7 @@ import {
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import React, { FC, useCallback } from "react";
-import { useSnapshot } from "valtio";
-import { state } from "../todoStore";
+import { useTodoStore } from "../todoStore";
 
 const useSearchStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,14 +58,15 @@ interface SearchProps {}
 export const Search: FC<SearchProps> = ({}) => {
   const classes = useSearchStyles();
 
-  const snap = useSnapshot(state, {sync:true})
+  const { search, setSearch } = useTodoStore()
+
 
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const txt = event.target.value;
-      state.search = txt;
-      
+      setSearch(txt);         
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps  
     []
   );
 
@@ -82,7 +82,7 @@ export const Search: FC<SearchProps> = ({}) => {
           input: classes.inputInput,
         }}
         inputProps={{ "aria-label": "search" }}
-        value={snap.search}
+        value={search}
         onChange={handleSearchChange}
       />
     </div>

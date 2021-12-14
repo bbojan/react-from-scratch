@@ -1,19 +1,18 @@
 import React, { useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
-import { useSnapshot } from "valtio";
 import SearchAppBar from "./components/AppBar";
 import HomePage from "./pages/HomePage";
 import NewTodoPage from "./pages/NewTodoPage";
 import TodoDetailsPage from "./pages/TodoDetailsPage";
-import { derivedState, loadTodos, onCreate, onDelete } from "./todoStore";
+import { useTodoStore } from "./todoStore";
 
 function App() {
-  useEffect(() => {
-    loadTodos();
-  }, []);
+  const { loadTodos, filteredTodos, onDelete, onCreate } = useTodoStore()
 
-  //const snap = useSnapshot(state)
-  const snapDerived = useSnapshot(derivedState)
+  useEffect(() => {
+    loadTodos();  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div>
@@ -27,7 +26,7 @@ function App() {
   
           
                   <HomePage
-                    todoList={snapDerived.filteredTodos}
+                    todoList={filteredTodos}
                     onDelete={onDelete}
                   />
         
