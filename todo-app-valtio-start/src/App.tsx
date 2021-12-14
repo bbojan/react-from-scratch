@@ -1,15 +1,17 @@
-import { Observer, observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
+import { useSnapshot } from "valtio";
 import SearchAppBar from "./components/AppBar";
 import HomePage from "./pages/HomePage";
 import NewTodoPage from "./pages/NewTodoPage";
 import TodoDetailsPage from "./pages/TodoDetailsPage";
-import { todoStore } from "./todoStore";
+import { state, loadTodos, onCreate, onDelete } from "./todoStore";
 
 function App() {
+  const snap = useSnapshot(state);
+
   useEffect(() => {
-    todoStore.loadTodos();
+    loadTodos();
   }, []);
 
   return (
@@ -21,24 +23,13 @@ function App() {
             exact={true}
             path="/"
             render={() => (
-              <Observer>
-                {() => (
-                  <HomePage
-                    todoList={todoStore.filteredTodos}
-                    onDelete={todoStore.onDelete}
-                  />
-                )}
-              </Observer>
+              <HomePage todoList={snap.filteredTodos!} onDelete={onDelete} />
             )}
           />
           <Route
             exact={true}
             path="/new"
-            render={() => (
-              <Observer>
-                {() => <NewTodoPage onCreate={todoStore.onCreate} />}
-              </Observer>
-            )}
+            render={() => <NewTodoPage onCreate={onCreate} />}
           />
           <Route exact={true} path="/:id" component={TodoDetailsPage} />
         </Switch>
@@ -47,4 +38,4 @@ function App() {
   );
 }
 
-export default observer(App);
+export default App;
