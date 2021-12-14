@@ -3,12 +3,12 @@ import {
   createStyles,
   InputBase,
   makeStyles,
-  Theme
+  Theme,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
+import { useAtom } from "jotai";
 import React, { FC, useCallback } from "react";
-import { useSnapshot } from "valtio";
-import { state } from "../todoStore";
+import { searchAtom } from "../todoStore";
 
 const useSearchStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -56,18 +56,16 @@ const useSearchStyles = makeStyles((theme: Theme) =>
 
 interface SearchProps {}
 
-export const Search: FC<SearchProps> = ({}) => {
+export const Search: FC<SearchProps> = () => {
   const classes = useSearchStyles();
-
-  const snap = useSnapshot(state, {sync:true})
+  const [search, setSearch] = useAtom(searchAtom);
 
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const txt = event.target.value;
-      state.search = txt;
-      
+      setSearch(txt);
     },
-    []
+    [setSearch]
   );
 
   return (
@@ -82,7 +80,7 @@ export const Search: FC<SearchProps> = ({}) => {
           input: classes.inputInput,
         }}
         inputProps={{ "aria-label": "search" }}
-        value={snap.search}
+        value={search}
         onChange={handleSearchChange}
       />
     </div>

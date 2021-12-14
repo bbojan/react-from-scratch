@@ -1,47 +1,44 @@
+import { useAtom } from "jotai";
 import React, { useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
-import { useSnapshot } from "valtio";
 import SearchAppBar from "./components/AppBar";
 import HomePage from "./pages/HomePage";
 import NewTodoPage from "./pages/NewTodoPage";
 import TodoDetailsPage from "./pages/TodoDetailsPage";
-import { derivedState, loadTodos, onCreate, onDelete } from "./todoStore";
+import { searchAtom, useTodoStore } from "./todoStore";
 
 function App() {
+  const { loadTodos, filteredTodos, onDelete, onCreate } = useTodoStore();
+  const [search, setSearch] = useAtom(searchAtom);
+
   useEffect(() => {
     loadTodos();
-  }, []);
-
-  //const snap = useSnapshot(state)
-  const snapDerived = useSnapshot(derivedState)
+  }, [loadTodos]);
 
   return (
     <div>
       <SearchAppBar />
+      <div
+        style={{ margin: "20px 50%" }}
+        onDoubleClick={() => {
+          setSearch("");
+        }}
+      >
+        {search}
+      </div>
       <div>
         <Switch>
           <Route
             exact={true}
             path="/"
             render={() => (
-  
-          
-                  <HomePage
-                    todoList={snapDerived.filteredTodos}
-                    onDelete={onDelete}
-                  />
-        
-     
+              <HomePage todoList={filteredTodos} onDelete={onDelete} />
             )}
           />
           <Route
             exact={true}
             path="/new"
-            render={() => (
-
-             <NewTodoPage onCreate={onCreate} />
-           
-            )}
+            render={() => <NewTodoPage onCreate={onCreate} />}
           />
           <Route exact={true} path="/:id" component={TodoDetailsPage} />
         </Switch>
