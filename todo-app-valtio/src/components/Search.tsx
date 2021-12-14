@@ -6,9 +6,9 @@ import {
   Theme
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
-import { observer } from "mobx-react-lite";
 import React, { FC, useCallback } from "react";
-import { todoStore } from "../todoStore";
+import { useSnapshot } from "valtio";
+import { state } from "../todoStore";
 
 const useSearchStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -56,15 +56,16 @@ const useSearchStyles = makeStyles((theme: Theme) =>
 
 interface SearchProps {}
 
-export const Search: FC<SearchProps> = observer(({}) => {
+export const Search: FC<SearchProps> = ({}) => {
   const classes = useSearchStyles();
-  //const ctx = useTodoContext();
+
+  const snap = useSnapshot(state, {sync:true})
 
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const txt = event.target.value;
-      todoStore.setSearch(txt);
-      // todoStore .onSearchChange(event.target.value);
+      state.search = txt;
+      
     },
     []
   );
@@ -81,9 +82,9 @@ export const Search: FC<SearchProps> = observer(({}) => {
           input: classes.inputInput,
         }}
         inputProps={{ "aria-label": "search" }}
-        value={todoStore.search}
+        value={snap.search}
         onChange={handleSearchChange}
       />
     </div>
   );
-});
+};

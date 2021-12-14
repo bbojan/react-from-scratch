@@ -1,6 +1,5 @@
 import { createStyles, List, makeStyles } from "@material-ui/core";
 import clsx from "clsx";
-import { observer } from "mobx-react-lite";
 import React, { FC } from "react";
 import { TodoListItem } from "../components/TodoListItem";
 import { TodoModel } from "../types/todo.model";
@@ -53,4 +52,4 @@ const HomePage: FC<HomePageProps> = ({ onDelete, todoList }) => {
   );
 };
 
-export default observer(HomePage);
+export default HomePage;

@@ -3,7 +3,6 @@ import AppBar from "@material-ui/core/AppBar";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import { observer } from "mobx-react-lite";
 import React from "react";
 import { useHistory, useRouteMatch } from "react-router";
 import { NavLink } from "react-router-dom";
@@ -68,4 +67,4 @@ function SearchAppBar() {
     </div>
   );
 }
-export default observer(SearchAppBar);
+export default SearchAppBar;
